@@ -26,14 +26,14 @@ const Header = () => {
             </Link>
             {!isLoggedIn ? (
                 <div>
-                    <Link to={"/sign-in"} className={styles.navItem}>
+                    <Link to={"/login"} className={styles.navItem}>
                         <FontAwesomeIcon icon={faUserCircle}/>
                         Sign In
                     </Link>
                 </div>
             ) : (
                 <div>
-                    <Link to={"/user"} className={styles.navItem}>
+                    <Link to={"/profile"} className={styles.navItem}>
                         <FontAwesomeIcon icon={faUserCircle}/>
                         {user.firstName}
                     </Link>
