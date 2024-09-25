@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { logout } from "../auth/authSlice";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -13,17 +14,18 @@ export const fetchUserProfile = createAsyncThunk(
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                    }
-                });
+                }
+            });
 
-            if(!response.ok) {
-                if(response.status === 401) return rejectWithValue("Unauthorized");
-                return rejectWithValue("Failed to fetch user profile");
+            if (!response.ok) {
+                if (response.status === 400) return rejectWithValue("Invalid fields.");
+                if (response.status === 500) return rejectWithValue("Internal Server Error. Please try again later.");
+                return rejectWithValue("An error occurred. Please try again later.");
             }
 
-            const data = await response.json();
-            return data;
-        } catch(e) {
+            const {body: {id, email, firstName, lastName}} = await response.json();
+            return {id, email, firstName, lastName};
+        } catch (e) {
             return rejectWithValue(e.message);
         }
     }
@@ -36,20 +38,24 @@ const userSlice = createSlice({
         loading: false,
         error: null
     },
-    reducers: {
-
-    },
-    extraReducers: (builder) =>{
+    reducers: {},
+    extraReducers: (builder) => {
         builder
             .addCase(fetchUserProfile.pending, (state) => {
-
+                state.loading = true;
+                state.error = null;
             })
             .addCase(fetchUserProfile.fulfilled, (state, action) => {
-
+                state.loading = false;
+                state.user = action.payload;
             })
             .addCase(fetchUserProfile.rejected, (state, action) => {
-
+                state.loading = false;
+                state.error = action.payload
             })
+            .addCase(logout, (state) => {
+                state.user = null;
+            });
     }
 });
 
