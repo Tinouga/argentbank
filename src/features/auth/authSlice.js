@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {fetchUserProfile} from "../user/userSlice";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -19,9 +20,9 @@ const clearToken = () => {
 
 export const login = createAsyncThunk(
     'auth/login',
-    async ({email, password, rememberMe}, {rejectWithValue}) => {
+    async ({email, password, rememberMe}, {dispatch, rejectWithValue}) => {
         try {
-            const response = await fetch(`http://localhost:3001/api/v1/user/login`, {
+            const response = await fetch(`${API_BASE_URL}/user/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -37,6 +38,10 @@ export const login = createAsyncThunk(
 
             const {body: {token}} = await response.json();
             setToken(token, rememberMe);
+
+            // fetch user's profile after successful login
+            dispatch(fetchUserProfile());
+
             return token;
         } catch (error) {
             return rejectWithValue(error.message);

@@ -1,5 +1,4 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import { logout } from "../auth/authSlice";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -10,7 +9,7 @@ export const fetchUserProfile = createAsyncThunk(
 
         try {
             const response = await fetch(`${API_BASE_URL}/user/profile`, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -53,9 +52,6 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload
             })
-            .addCase(logout, (state) => {
-                state.user = null;
-            });
     }
 });
 

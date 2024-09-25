@@ -11,7 +11,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector((state) => state.user.user);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -35,7 +35,7 @@ const Header = () => {
                 <div>
                     <Link to={"/profile"} className={styles.navItem}>
                         <FontAwesomeIcon icon={faUserCircle}/>
-                        {user.firstName}
+                        {user && user.firstName}
                     </Link>
                     <button onClick={handleLogout} className={styles.navItem}>
                         <FontAwesomeIcon icon={faSignOut}/>
