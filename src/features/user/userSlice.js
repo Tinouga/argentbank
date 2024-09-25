@@ -32,7 +32,9 @@ export const fetchUserProfile = createAsyncThunk(
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-
+        user: null,
+        loading: false,
+        error: null
     },
     reducers: {
 

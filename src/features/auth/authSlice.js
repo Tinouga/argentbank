@@ -36,6 +36,8 @@ export const login = createAsyncThunk(
 
             const data = await response.json();
             setToken(data.token, rememberMe);
+            // TODO check that a user object is returned from the API,
+            //  seems like only a token with the current API implementation
             return { token: data.token, user: data.user };
         } catch(error) {
             return rejectWithValue(error.message);
