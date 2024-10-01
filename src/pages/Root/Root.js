@@ -9,7 +9,7 @@ import {useEffect} from "react";
 
 const Root = () => {
     const location = useLocation();
-    const darkRoutes = ['/login', '/profile'];
+    const darkRoutes = ['/login', '/user'];
     const isDark = darkRoutes.includes(location.pathname);
 
     // Fetch user profile if user is logged in at startup

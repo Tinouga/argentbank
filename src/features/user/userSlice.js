@@ -30,6 +30,35 @@ export const fetchUserProfile = createAsyncThunk(
     }
 )
 
+export const updateUserProfile = createAsyncThunk(
+    'user/updateUserProfile',
+    async({firstName, lastName}, {getState, rejectWithValue}) => {
+        const token = getState().auth.token;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/profile`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({firstName, lastName})
+            });
+
+            if (!response.ok) {
+                if (response.status === 400) return rejectWithValue("Invalid fields.");
+                if (response.status === 500) return rejectWithValue("Internal Server Error. Please try again later.");
+                return rejectWithValue("An error occurred. Please try again later.");
+            }
+
+            const data = await response.json();
+            return data.body; // todo check what it gives back
+        } catch(e) {
+            return rejectWithValue(e.message);
+        }
+    }
+)
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -40,6 +69,7 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            // fetchUserProfile
             .addCase(fetchUserProfile.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -51,6 +81,20 @@ const userSlice = createSlice({
             .addCase(fetchUserProfile.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
+            })
+            // updateUserProfile
+            .addCase(updateUserProfile.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateUserProfile.fulfilled, (state, action) => {
+                state.loading = false;
+                // todo check if it's correct when have access to the api
+                state.user = { ...state.user, ...action.payload };
+            })
+            .addCase(updateUserProfile.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             })
     }
 });
