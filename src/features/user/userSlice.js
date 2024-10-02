@@ -32,7 +32,7 @@ export const fetchUserProfile = createAsyncThunk(
 
 export const updateUserProfile = createAsyncThunk(
     'user/updateUserProfile',
-    async({firstName, lastName}, {getState, rejectWithValue}) => {
+    async ({firstName, lastName}, {getState, rejectWithValue}) => {
         const token = getState().auth.token;
 
         try {
@@ -51,21 +51,23 @@ export const updateUserProfile = createAsyncThunk(
                 return rejectWithValue("An error occurred. Please try again later.");
             }
 
-            const data = await response.json();
-            return data.body; // todo check what it gives back
-        } catch(e) {
+            const {body} = await response.json();
+            return {firstName: body.firstName, lastName: body.lastName};
+        } catch (e) {
             return rejectWithValue(e.message);
         }
     }
 )
 
+const initialState = {
+    user: null,
+    loading: false,
+    error: null
+};
+
 const userSlice = createSlice({
     name: 'user',
-    initialState: {
-        user: null,
-        loading: false,
-        error: null
-    },
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
@@ -89,8 +91,7 @@ const userSlice = createSlice({
             })
             .addCase(updateUserProfile.fulfilled, (state, action) => {
                 state.loading = false;
-                // todo check if it's correct when have access to the api
-                state.user = { ...state.user, ...action.payload };
+                state.user = {...state.user, ...action.payload};
             })
             .addCase(updateUserProfile.rejected, (state, action) => {
                 state.loading = false;
@@ -99,4 +100,5 @@ const userSlice = createSlice({
     }
 });
 
+export { initialState as userInitialState };
 export default userSlice.reducer;

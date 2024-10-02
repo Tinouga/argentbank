@@ -51,7 +51,7 @@ const Profile = () => {
                         <h1>
                             Welcome back
                             <br/>
-                            Tony Jarvis!
+                            {user && `${user.firstName } ${user.lastName}!`}
                         </h1>
                         <button className={styles.editBtn} onClick={handleEditClick}>Edit Name</button>
                     </>
@@ -64,13 +64,13 @@ const Profile = () => {
                                 type="text"
                                 value={firstNameInput}
                                 onChange={(e) => setFirstNameInput(e.target.value)}
-                                placeholder="First Name"
+                                placeholder={user.firstName}
                             />
                             <input
                                 type="text"
                                 value={lastNameInput}
                                 onChange={(e) => setLastNameInput(e.target.value)}
-                                placeholder="Last Name"
+                                placeholder={user.lastName}
                             />
                             </div>
                             <div className={styles.editFormBtns}>

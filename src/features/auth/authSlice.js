@@ -39,6 +39,9 @@ export const login = createAsyncThunk(
             const {body: {token}} = await response.json();
             setToken(token, rememberMe);
 
+            // update the auth state with the new token
+            dispatch(setAuthToken(token));
+
             // fetch user's profile after successful login
             dispatch(fetchUserProfile());
 
@@ -49,20 +52,26 @@ export const login = createAsyncThunk(
     }
 )
 
+const initialState = {
+    isLoggedIn: !!localStorage.getItem("token") || !!sessionStorage.getItem("token"),
+    token: localStorage.getItem("token") || sessionStorage.getItem("token"),
+    loading: false,
+    error: null
+};
+
 const authSlice = createSlice({
     name: 'auth',
-    initialState: {
-        isLoggedIn: !!localStorage.getItem("token") || !!sessionStorage.getItem("token"),
-        token: localStorage.getItem("token") || sessionStorage.getItem("token"),
-        loading: false,
-        error: null
-    },
+    initialState,
     reducers: {
         logout(state) {
             state.isLoggedIn = false;
             state.token = null;
             clearToken();
         },
+        setAuthToken(state, action) {
+            state.isLoggedIn = true;
+            state.token = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -72,8 +81,6 @@ const authSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false;
-                state.isLoggedIn = true;
-                state.token = action.payload;
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
@@ -83,5 +90,6 @@ const authSlice = createSlice({
     }
 });
 
-export const {logout} = authSlice.actions;
+export const {logout, setAuthToken} = authSlice.actions;
+export { initialState as authInitialState };
 export default authSlice.reducer;
