@@ -33,7 +33,7 @@ const Header = () => {
                 </div>
             ) : (
                 <div>
-                    <Link to={"/user"} className={styles.navItem}>
+                    <Link to={"/profile"} className={styles.navItem}>
                         <FontAwesomeIcon icon={faUserCircle}/>
                         {user && user.firstName}
                     </Link>

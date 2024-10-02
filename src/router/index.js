@@ -3,23 +3,28 @@ import Root from "../pages/Root";
 import Home from "../pages/Home";
 import SignIn from "../pages/SignIn";
 import Profile from "../pages/Profile";
+import RequireAuth from "../components/RequireAuth";
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Root />,
+        element: <Root/>,
         children: [
             {
                 index: true,
-                element: <Home />
+                element: <Home/>
             },
             {
                 path: 'login',
-                element: <SignIn />
+                element: <SignIn/>
             },
             {
-                path: 'user',
-                element: <Profile />,
+                path: 'profile',
+                element: (
+                    <RequireAuth>
+                        <Profile/>
+                    </RequireAuth>
+                ),
             }
         ]
     }

@@ -20,7 +20,7 @@ const SignIn = () => {
         e.preventDefault();
         const resultAction = await dispatch(login({email: username, password, rememberMe}));
         if(login.fulfilled.match(resultAction)) {
-            navigate('/user');
+            navigate('/profile');
         }
     };
 
