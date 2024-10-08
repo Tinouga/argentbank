@@ -37,7 +37,7 @@ const Header = () => {
                         <FontAwesomeIcon icon={faUserCircle}/>
                         {user && user.firstName}
                     </Link>
-                    <button onClick={handleLogout} className={styles.navItem}>
+                    <button onClick={handleLogout} className={styles.navButton}>
                         <FontAwesomeIcon icon={faSignOut}/>
                         Sign Out
                     </button>
